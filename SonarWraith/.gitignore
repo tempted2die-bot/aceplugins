@@ -1,0 +1,4 @@
+build/
+Tests/out/
+Tests/render_demo
+Tests/spec.png

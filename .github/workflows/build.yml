@@ -1,0 +1,31 @@
+name: Build plugins
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin: [SonarWraith, DepthCharge]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure ${{ matrix.plugin }} (downloads JUCE)
+        shell: bash
+        run: cmake -S "${{ matrix.plugin }}" -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build ${{ matrix.plugin }} VST3 + Standalone
+        shell: bash
+        run: cmake --build build --config Release --target ${{ matrix.plugin }}_VST3 ${{ matrix.plugin }}_Standalone --parallel
+
+      - name: Upload ${{ matrix.plugin }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.plugin }}-Windows
+          path: |
+            build/${{ matrix.plugin }}_artefacts/Release/VST3
+            build/${{ matrix.plugin }}_artefacts/Release/Standalone
