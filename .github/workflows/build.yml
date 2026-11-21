@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        plugin: [SonarWraith, DepthCharge]
+        plugin: [WraithCore, SonarWraith, DepthCharge]
     steps:
       - uses: actions/checkout@v4
 
